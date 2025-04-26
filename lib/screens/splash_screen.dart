@@ -4,6 +4,7 @@ import '../utils/theme.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 import '../data/auth_provider.dart';
+import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -122,14 +123,15 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                       'Delicious food at your doorstep',
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
-                    const SizedBox(height: 48),
-                    SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppTheme.secondaryColor),
-                        strokeWidth: 3,
-                      ),
+                    const SizedBox(height: 30),
+            // Loading Animation
+            SizedBox(
+              height: 250,
+              width: 250,
+              child: Lottie.asset(
+                'assets/loading.json',
+                fit: BoxFit.cover,
+              ),
                     ),
                   ],
                 ),

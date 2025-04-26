@@ -25,7 +25,7 @@ class AppTheme {
     colorScheme: ColorScheme.light(
       primary: primaryColor,
       secondary: secondaryColor,
-      tertiary: accentColor,
+      tertiary:  accentColor,
     ),
     textTheme: const TextTheme(
       displayLarge: TextStyle(
