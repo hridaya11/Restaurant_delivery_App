@@ -79,13 +79,6 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> with SingleTickerPr
         Container(
           height: 250,
           width: double.infinity,
-          decoration: BoxDecoration(
-            color: AppTheme.primaryColor,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
-            ),
-          ),
           child: Hero(
             tag: 'food_image_${widget.foodItem.id}',
             child: ClipRRect(
@@ -93,10 +86,7 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> with SingleTickerPr
                 bottomLeft: Radius.circular(30),
                 bottomRight: Radius.circular(30),
               ),
-              child: Image.asset(
-                widget.foodItem.imageUrl,
-                fit: BoxFit.cover,
-              ),
+              child: _buildImageOrFallback(),
             ),
           ),
         ),
@@ -125,9 +115,9 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> with SingleTickerPr
             onTap: () {
               // Toggle favorite
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   content: Text('Added to favorites!'),
-                  duration: const Duration(seconds: 1),
+                  duration: Duration(seconds: 1),
                 ),
               );
             },
@@ -144,6 +134,92 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> with SingleTickerPr
         ),
       ],
     );
+  }
+
+  Widget _buildImageOrFallback() {
+    try {
+      return Image.asset(
+        widget.foodItem.imageUrl,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: 250,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildFallbackImage();
+        },
+      );
+    } catch (e) {
+      return _buildFallbackImage();
+    }
+  }
+
+  Widget _buildFallbackImage() {
+    return Container(
+      color: _getCategoryColor(),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              _getCategoryIcon(),
+              size: 80,
+              color: Colors.white,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              widget.foodItem.name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              widget.foodItem.category,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getCategoryColor() {
+    switch (widget.foodItem.category) {
+      case 'Pizza':
+        return Colors.redAccent;
+      case 'Burger':
+        return Colors.orangeAccent;
+      case 'Pasta':
+        return Colors.amberAccent;
+      case 'Dessert':
+        return Colors.pinkAccent;
+      case 'Drinks':
+        return Colors.blueAccent;
+      default:
+        return AppTheme.secondaryColor;
+    }
+  }
+
+  IconData _getCategoryIcon() {
+    switch (widget.foodItem.category) {
+      case 'Pizza':
+        return Icons.local_pizza;
+      case 'Burger':
+        return Icons.lunch_dining;
+      case 'Pasta':
+        return Icons.dinner_dining;
+      case 'Dessert':
+        return Icons.icecream;
+      case 'Drinks':
+        return Icons.local_drink;
+      default:
+        return Icons.fastfood;
+    }
   }
 
   Widget _buildFoodDetails() {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../utils/theme.dart';
 import 'home_screen.dart';
+import 'login_screen.dart';
+import '../data/auth_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -40,10 +42,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     
     _controller.forward();
     
+    // Check if user is logged in
+    final isLoggedIn = AuthProvider.isLoggedIn;
+    
     Timer(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
+          pageBuilder: (context, animation, secondaryAnimation) => 
+            isLoggedIn ? const HomeScreen() : const LoginScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             var begin = const Offset(1.0, 0.0);
             var end = Offset.zero;

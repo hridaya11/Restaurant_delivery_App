@@ -6,6 +6,7 @@ import '../widgets/custom_drawer.dart';
 import '../data/food_data.dart';
 import 'food_detail_screen.dart';
 import 'cart_screen.dart';
+import '../data/auth_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -116,11 +117,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildWelcomeSection() {
+    final userName = AuthProvider.currentUser?.name ?? 'Guest';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Hello, John!',
+          'Hello, $userName!',
           style: Theme.of(context).textTheme.displayMedium,
         ),
         const SizedBox(height: 8),

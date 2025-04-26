@@ -38,12 +38,7 @@ class PopularFoodItem extends StatelessWidget {
               ),
               child: Hero(
                 tag: 'food_image_${foodItem.id}',
-                child: Image.asset(
-                  foodItem.imageUrl,
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+                child: _buildFoodImage(context),
               ),
             ),
             Padding(
@@ -113,5 +108,88 @@ class PopularFoodItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildFoodImage(BuildContext context) {
+    // Fixed height container to prevent infinite constraints
+    return Container(
+      height: 120,
+      width: double.infinity,
+      child: _buildImageOrFallback(),
+    );
+  }
+
+  Widget _buildImageOrFallback() {
+    try {
+      return Image.asset(
+        foodItem.imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildFallbackImage();
+        },
+      );
+    } catch (e) {
+      return _buildFallbackImage();
+    }
+  }
+
+  Widget _buildFallbackImage() {
+    return Container(
+      color: _getCategoryColor(),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              _getCategoryIcon(),
+              size: 40,
+              color: Colors.white,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              foodItem.category,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getCategoryColor() {
+    switch (foodItem.category) {
+      case 'Pizza':
+        return Colors.redAccent;
+      case 'Burger':
+        return Colors.orangeAccent;
+      case 'Pasta':
+        return Colors.amberAccent;
+      case 'Dessert':
+        return Colors.pinkAccent;
+      case 'Drinks':
+        return Colors.blueAccent;
+      default:
+        return AppTheme.secondaryColor;
+    }
+  }
+
+  IconData _getCategoryIcon() {
+    switch (foodItem.category) {
+      case 'Pizza':
+        return Icons.local_pizza;
+      case 'Burger':
+        return Icons.lunch_dining;
+      case 'Pasta':
+        return Icons.dinner_dining;
+      case 'Dessert':
+        return Icons.icecream;
+      case 'Drinks':
+        return Icons.local_drink;
+      default:
+        return Icons.fastfood;
+    }
   }
 }

@@ -33,11 +33,10 @@ class CartItem extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              cartItem.foodItem.imageUrl,
+            child: Container(
               width: 80,
               height: 80,
-              fit: BoxFit.cover,
+              child: _buildImageOrFallback(),
             ),
           ),
           const SizedBox(width: 16),
@@ -96,5 +95,66 @@ class CartItem extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildImageOrFallback() {
+    try {
+      return Image.asset(
+        cartItem.foodItem.imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildFallbackImage();
+        },
+      );
+    } catch (e) {
+      return _buildFallbackImage();
+    }
+  }
+
+  Widget _buildFallbackImage() {
+    return Container(
+      color: _getCategoryColor(),
+      child: Center(
+        child: Icon(
+          _getCategoryIcon(),
+          size: 30,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Color _getCategoryColor() {
+    switch (cartItem.foodItem.category) {
+      case 'Pizza':
+        return Colors.redAccent;
+      case 'Burger':
+        return Colors.orangeAccent;
+      case 'Pasta':
+        return Colors.amberAccent;
+      case 'Dessert':
+        return Colors.pinkAccent;
+      case 'Drinks':
+        return Colors.blueAccent;
+      default:
+        return AppTheme.secondaryColor;
+    }
+  }
+
+  IconData _getCategoryIcon() {
+    switch (cartItem.foodItem.category) {
+      case 'Pizza':
+        return Icons.local_pizza;
+      case 'Burger':
+        return Icons.lunch_dining;
+      case 'Pasta':
+        return Icons.dinner_dining;
+      case 'Dessert':
+        return Icons.icecream;
+      case 'Drinks':
+        return Icons.local_drink;
+      default:
+        return Icons.fastfood;
+    }
   }
 }
